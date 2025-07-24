@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Details</title>
+    <!-- <title>ચુંટણી સંચાલન</title> -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+        h2 {
+            text-align: center;
+        }
+
+        /* Box to display registration details on the left side */
+        #details-box {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 300px;
+            height: 350px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            border-radius: 8px;
+        }
+
+        #details-box h3 {
+            text-align: center;
+            margin-top: 0;
+        }
+
+        .details {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>ચુંટણી સંચાલન</h2>
+
+    <!-- Box to display details -->
+    <div id="details-box">
+        <h3>Voter Details</h3>
+        <div id="details"></div>
+    </div>
+
+    <script>
+        // Function to extract query parameters from URL
+        function getQueryParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return {
+                name: urlParams.get('name'),
+                address: urlParams.get('address'),
+                phone: urlParams.get('phone'),
+                uqiceId: urlParams.get('uqice_id')
+            };
+        }
+
+        // Extract details from URL and display in the details box
+        const details = getQueryParams();
+
+        const detailsContent = `
+            <div class="details"><strong>Name:</strong> ${details.name}</div>
+            <div class="details"><strong>Address:</strong> ${details.address}</div>
+            <div class="details"><strong>Phone Number:</strong> ${details.phone}</div>
+            <div class="details"><strong>UQICE ID:</strong> ${details.uqiceId}</div>
+        `;
+
+        // Insert the content into the details box
+        document.getElementById('details').innerHTML = detailsContent;
+    </script>
+
+</body>
+</html>

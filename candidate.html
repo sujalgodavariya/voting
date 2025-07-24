@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Candidate</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 50%;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Register a Candidate</h2>
+        <form id="candidate-form">
+            <label for="candidate-name">Candidate Name</label>
+            <input type="text" id="candidate-name" name="candidate-name" required>
+
+            <label for="party-name">Party Name</label>
+            <input type="text" id="party-name" name="party-name" required>
+
+            <label for="candidate-logo">Candidate Logo</label>
+            <input type="file" id="candidate-logo" name="candidate-logo" required>
+
+            <input type="submit" value="Register Candidate">
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('candidate-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Collect form data
+            const name = document.getElementById('candidate-name').value;
+            const party = document.getElementById('party-name').value;
+            const logo = document.getElementById('candidate-logo').files[0];
+
+            if (!logo) {
+                alert('Please upload a logo.');
+                return;
+            }
+
+            // Convert image file to base64 using FileReader
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                // Prepare candidate data object
+                const candidateData = {
+                    name: name,
+                    party: party,
+                    logo: reader.result // Base64 string of the logo image
+                };
+
+                // Save the candidate data in localStorage
+                let candidates = JSON.parse(localStorage.getItem('candidates')) || [];
+                candidates.push(candidateData);
+                localStorage.setItem('candidates', JSON.stringify(candidates));
+
+                // Show success alert
+                alert('Candidate registered successfully!');
+                window.location.href = 'admin.html'; // Redirect to admin page
+            };
+            reader.readAsDataURL(logo); // Convert image to base64
+        });
+    </script>
+
+</body>
+</html>

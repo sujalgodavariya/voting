@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+            cursor: pointer;
+            transform: scale(1.02);
+            transition: 0.3s ease;
+        }
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .delete-btn:hover {
+            background-color: #d32f2f;
+        }
+        .edit-btn {
+            background-color: #ff9800;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .edit-btn:hover {
+            background-color: #f57c00;
+        }
+        .table-container {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Admin Dashboard</h2>
+
+        <!-- User Registration Table -->
+        <div class="table-container">
+            <h3>User Registrations</h3>
+            <table id="user-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Phone</th>
+                        <th>UQICE ID</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- Candidate Registration Table -->
+        <div class="table-container">
+            <h3>Candidate Registrations</h3>
+            <table id="candidate-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Party</th>
+                        <th>Logo</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Function to load and display user registrations
+        function loadUsers() {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const userTableBody = document.getElementById('user-table').getElementsByTagName('tbody')[0];
+
+            // Clear existing rows
+            userTableBody.innerHTML = '';
+
+            users.forEach((user, index) => {
+                const row = userTableBody.insertRow();
+                row.innerHTML = `
+                    <td>${user.name}</td>
+                    <td>${user.address}</td>
+                    <td>${user.phone}</td>
+                    <td>${user.uqiceId}</td>
+                    <td>
+                        <button class="edit-btn" onclick="editUser(${index})">Edit</button>
+                        <button class="delete-btn" onclick="deleteUser(${index})">Delete</button>
+                    </td>
+                `;
+            });
+        }
+
+        // Function to load and display candidate registrations
+        function loadCandidates() {
+            const candidates = JSON.parse(localStorage.getItem('candidates')) || [];
+            const candidateTableBody = document.getElementById('candidate-table').getElementsByTagName('tbody')[0];
+
+            // Clear existing rows
+            candidateTableBody.innerHTML = '';
+
+            candidates.forEach((candidate, index) => {
+                const row = candidateTableBody.insertRow();
+                row.innerHTML = `
+                    <td>${candidate.name}</td>
+                    <td>${candidate.party}</td>
+                    <td><img src="${candidate.logo}" alt="${candidate.name}'s logo" width="50"></td>
+                    <td>
+                        <button class="edit-btn" onclick="editCandidate(${index})">Edit</button>
+                        <button class="delete-btn" onclick="deleteCandidate(${index})">Delete</button>
+                    </td>
+                `;
+            });
+        }
+
+        // Function to delete a user
+        function deleteUser(index) {
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            users.splice(index, 1); // Remove the selected user
+            localStorage.setItem('users', JSON.stringify(users));
+            loadUsers(); // Reload the table
+        }
+
+        // Function to delete a candidate
+        function deleteCandidate(index) {
+            let candidates = JSON.parse(localStorage.getItem('candidates')) || [];
+            candidates.splice(index, 1); // Remove the selected candidate
+            localStorage.setItem('candidates', JSON.stringify(candidates));
+            loadCandidates(); // Reload the table
+        }
+
+        // Function to edit a user
+        function editUser(index) {
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users[index];
+
+            // Populate form with user details
+            const name = prompt("Edit Name:", user.name);
+            const address = prompt("Edit Address:", user.address);
+            const phone = prompt("Edit Phone:", user.phone);
+            const uqiceId = prompt("Edit UQICE ID:", user.uqiceId);
+
+            if (name && address && phone && uqiceId) {
+                // Update user details
+                users[index] = { name, address, phone, uqiceId };
+                localStorage.setItem('users', JSON.stringify(users));
+                loadUsers(); // Reload the table
+            }
+        }
+
+        // Function to edit a candidate
+        function editCandidate(index) {
+            let candidates = JSON.parse(localStorage.getItem('candidates')) || [];
+            const candidate = candidates[index];
+
+            // Prompt for candidate details
+            const name = prompt("Edit Candidate Name:", candidate.name);
+            const party = prompt("Edit Party Name:", candidate.party);
+
+            if (name && party) {
+                // Update candidate details
+                candidates[index] = { name, party, logo: candidate.logo };
+                localStorage.setItem('candidates', JSON.stringify(candidates));
+                loadCandidates(); // Reload the table
+            }
+        }
+
+        // Load the user and candidate data when the page loads
+        window.onload = function() {
+            loadUsers();
+            loadCandidates();
+        }
+    </script>
+
+</body>
+</html>
